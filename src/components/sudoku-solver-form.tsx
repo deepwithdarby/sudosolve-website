@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, UploadCloud, WandSparkles, X, AlertCircle, Download, Trash2 } from "lucide-react";
+import { Confetti } from "./ui/confetti";
 
 const initialState: { solvedImageUrl: string | null; error: string | null } = {
   solvedImageUrl: null,
@@ -159,6 +160,7 @@ export function SudokuSolverForm() {
 
   return (
     <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 melt-card">
+       {isSolved && <Confetti />}
       <CardContent className="p-6">
         <form ref={formRef} action={formAction} className="space-y-6">
           <div className="relative">

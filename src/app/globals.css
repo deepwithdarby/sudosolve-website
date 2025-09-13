@@ -90,6 +90,25 @@
     animation: melt 20s ease-in-out infinite alternate;
     filter: url(#melt-filter);
   }
+
+  .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  
+  .snowflake {
+    position: absolute;
+    top: -20px;
+    font-size: 2rem;
+    color: white;
+    animation: fall linear forwards;
+    opacity: 0.8;
+  }
 }
 
 @keyframes melt {
@@ -101,5 +120,12 @@
   50% {
     --turbulence-frequency: 0.03;
     --displacement-scale: 15;
+  }
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(105vh) rotate(360deg);
+    opacity: 0;
   }
 }
