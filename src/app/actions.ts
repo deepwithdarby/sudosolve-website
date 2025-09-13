@@ -1,3 +1,4 @@
+
 "use server";
 
 interface FormState {
@@ -12,7 +13,11 @@ export async function solveSudoku(
   const file = formData.get("image") as File;
 
   if (!file || file.size === 0) {
-    return { solvedImageUrl: null, error: "Please select an image file." };
+    // This is part of the reset flow, don't treat it as an error.
+    if (!prevState.solvedImageUrl && !prevState.error) {
+       return { solvedImageUrl: null, error: "Please select an image file." };
+    }
+    return { solvedImageUrl: null, error: null };
   }
 
   if (!file.type.startsWith("image/")) {
