@@ -1,6 +1,6 @@
 import { SudokuSolverForm } from "@/components/sudoku-solver-form";
-import { Puzzle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Puzzle, UploadCloud, WandSparkles, Download } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
   return (
@@ -23,6 +23,35 @@ export default function Home() {
         </CardContent>
       </Card>
       <SudokuSolverForm />
+      <Card className="mt-8 w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
+        <CardHeader>
+          <CardTitle className="text-2xl font-headline text-primary-foreground/90 drop-shadow-lg text-center">
+            Features
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-4 text-primary-foreground/80 font-medium drop-shadow-sm">
+            <li className="flex items-start gap-4">
+              <UploadCloud className="w-6 h-6 text-primary-foreground/90 mt-1 flex-shrink-0" />
+              <span>
+                <strong>Upload & Go:</strong> Simply upload an image of your Sudoku puzzle to get started.
+              </span>
+            </li>
+            <li className="flex items-start gap-4">
+              <WandSparkles className="w-6 h-6 text-primary-foreground/90 mt-1 flex-shrink-0" />
+              <span>
+                <strong>AI-Powered Solution:</strong> Our smart solver uses advanced OCR to read the board and find the solution instantly.
+              </span>
+            </li>
+            <li className="flex items-start gap-4">
+              <Download className="w-6 h-6 text-primary-foreground/90 mt-1 flex-shrink-0" />
+              <span>
+                <strong>Download & Save:</strong> Easily download the solved puzzle as a PNG image to your device.
+              </span>
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
     </main>
   );
 }
