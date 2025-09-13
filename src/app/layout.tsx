@@ -18,7 +18,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
-        <link rel="preload" href="https://res.cloudinary.com/dk46fa3yl/image/upload/v1757737096/grok_image_a3kb7r_q0hlks.jpg" as="image" />
       </head>
       <body className="font-body antialiased">
         <svg style={{ position: 'absolute', width: 0, height: 0 }} >
