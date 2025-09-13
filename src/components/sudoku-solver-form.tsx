@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import Image from "next/image";
 import { solveSudoku } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ function SubmitButton({ hasFile }: { hasFile: boolean }) {
     <Button
       type="submit"
       disabled={!hasFile || pending}
-      className="w-full text-lg py-6"
+      className="w-full text-lg py-7"
       size="lg"
     >
       {pending ? (
@@ -40,7 +41,7 @@ function SubmitButton({ hasFile }: { hasFile: boolean }) {
 }
 
 export function SudokuSolverForm() {
-  const [state, formAction, isPending] = useFormState(solveSudoku, initialState);
+  const [state, formAction, isPending] = useActionState(solveSudoku, initialState);
 
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -70,12 +71,9 @@ export function SudokuSolverForm() {
         URL.revokeObjectURL(previewUrl);
       }
       setPreviewUrl(URL.createObjectURL(selectedFile));
-      // Clear previous solved state when a new file is chosen
-      if (state.solvedImageUrl || state.error) {
-        formRef.current?.reset();
-        // Reset the form action state
-        (formAction as (payload: FormData) => void)(new FormData());
-      }
+      
+      const emptyFormData = new FormData();
+      formAction(emptyFormData);
     }
   };
   
@@ -90,8 +88,8 @@ export function SudokuSolverForm() {
     if (formRef.current) {
         formRef.current.reset();
     }
-     // Reset the form action state
-    (formAction as (payload: FormData) => void)(new FormData());
+    const emptyFormData = new FormData();
+    formAction(emptyFormData);
   };
 
   const handleDownload = () => {
@@ -106,7 +104,6 @@ export function SudokuSolverForm() {
   
   useEffect(() => {
     if (state.solvedImageUrl && file) {
-        // Clear file input after a successful solve to transition to the "solved" state
         setFile(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -132,7 +129,7 @@ export function SudokuSolverForm() {
             className="rounded-md object-contain"
             />
             {isPending && (
-                <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center rounded-md transition-opacity duration-300">
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-md transition-opacity duration-300">
                     <Loader2 className="h-16 w-16 text-primary animate-spin" />
                     <p className="text-white/90 mt-4 text-lg font-medium">Solving puzzle...</p>
                 </div>
@@ -154,13 +151,13 @@ export function SudokuSolverForm() {
 
 
   return (
-    <Card className="w-full max-w-lg bg-card/60 backdrop-blur-xl border-white/20 shadow-2xl shadow-primary/10">
+    <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
       <CardContent className="p-6">
         <form ref={formRef} action={formAction} className="space-y-6">
           <div className="relative">
             <label
               htmlFor="sudoku-image"
-              className="relative flex flex-col items-center justify-center w-full h-80 rounded-lg border-2 border-dashed border-primary/30 cursor-pointer bg-black/10 hover:border-primary/50 hover:bg-black/20 transition-all duration-300"
+              className="relative flex flex-col items-center justify-center w-full h-80 rounded-lg border-2 border-dashed border-primary/30 cursor-pointer bg-black/5 hover:border-primary/50 hover:bg-black/10 transition-all duration-300"
             >
               <DisplayContent />
             </label>
@@ -175,7 +172,7 @@ export function SudokuSolverForm() {
               disabled={isPending}
             />
              {previewUrl && !isPending && (
-                <Button variant="ghost" size="icon" type="button" aria-label="Clear preview" className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white hover:text-white rounded-full h-8 w-8 z-10" onClick={handleReset}>
+                <Button variant="ghost" size="icon" type="button" aria-label="Clear preview" className="absolute top-3 right-3 bg-black/40 hover:bg-black/60 text-white hover:text-white rounded-full h-8 w-8 z-10" onClick={handleReset}>
                     <X className="h-4 w-4"/>
                 </Button>
             )}
@@ -191,11 +188,11 @@ export function SudokuSolverForm() {
 
           {isSolved ? (
             <div className="grid grid-cols-2 gap-4">
-                <Button type="button" variant="outline" size="lg" onClick={handleDownload}>
+                <Button type="button" variant="outline" size="lg" className="py-7 text-base" onClick={handleDownload}>
                     <Download className="mr-2 h-5 w-5" />
                     Download
                 </Button>
-                <Button type="button" variant="secondary" size="lg" onClick={handleReset}>
+                <Button type="button" variant="secondary" size="lg" className="py-7 text-base" onClick={handleReset}>
                     <Trash2 className="mr-2 h-5 w-5" />
                     Clear
                 </Button>
