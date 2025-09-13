@@ -34,33 +34,23 @@ export async function solveSudoku(
       }
     );
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-        const errorText = await response.text();
-        console.error("API Error:", errorText);
+        console.error("API Error:", responseData);
         return {
             solvedImageUrl: null,
-            error: `Failed to solve puzzle. The server responded with status ${response.status}. Please try a clearer image.`,
+            error: responseData.message || `Failed to solve puzzle. The server responded with status ${response.status}.`,
         };
     }
-
-    const blob = await response.blob();
-
-    if (blob.type.startsWith("image/")) {
-        const buffer = await blob.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString("base64");
-        const mimeType = blob.type;
-        const dataUrl = `data:${mimeType};base64,${base64}`;
+    
+    if (responseData.image) {
+        const dataUrl = `data:image/png;base64,${responseData.image}`;
         return { solvedImageUrl: dataUrl, error: null };
     } else {
-        const errorText = await blob.text();
-        console.error("API returned non-image data:", errorText);
-        try {
-            const errorJson = JSON.parse(errorText);
-            return { solvedImageUrl: null, error: errorJson.error || "The solver could not process this image." };
-        } catch {
-            return { solvedImageUrl: null, error: "Received an unexpected response from the solver." };
-        }
+        return { solvedImageUrl: null, error: responseData.message || "The solver could not process this image." };
     }
+
   } catch (error) {
     console.error("Fetch Error:", error);
     return {
