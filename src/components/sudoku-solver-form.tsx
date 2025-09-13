@@ -151,7 +151,7 @@ export function SudokuSolverForm() {
 
 
   return (
-    <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
+    <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 shimmer-card">
       <CardContent className="p-6">
         <form ref={formRef} action={formAction} className="space-y-6">
           <div className="relative">

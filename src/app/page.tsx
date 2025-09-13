@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
-      <Card className="mb-6 bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
+      <Card className="mb-6 bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 shimmer-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-4">
             <Puzzle className="w-12 h-12 text-primary-foreground/90" />
@@ -15,7 +15,7 @@ export default function Home() {
           </div>
         </CardContent>
       </Card>
-      <Card className="mb-8 max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
+      <Card className="mb-8 max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 shimmer-card">
         <CardContent className="p-6">
           <p className="text-center text-primary-foreground/80 font-medium drop-shadow-sm">
             Stuck on a Sudoku? Upload a photo of your puzzle, and let our AI solver handle the rest. Get the solution in seconds!
@@ -23,7 +23,7 @@ export default function Home() {
         </CardContent>
       </Card>
       <SudokuSolverForm />
-      <Card className="mt-8 w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20">
+      <Card className="mt-8 w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 shimmer-card">
         <CardHeader>
           <CardTitle className="text-2xl font-headline text-primary-foreground/90 drop-shadow-lg text-center">
             Features

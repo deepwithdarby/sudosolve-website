@@ -97,3 +97,27 @@
     z-index: -1;
   }
 }
+
+@layer components {
+  .shimmer-card {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      110deg,
+      transparent 20%,
+      hsl(var(--primary) / 0.1) 45%,
+      hsl(var(--primary) / 0.3) 50%,
+      hsl(var(--primary) / 0.1) 55%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 15s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+}
