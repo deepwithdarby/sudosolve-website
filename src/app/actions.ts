@@ -27,7 +27,7 @@ export async function solveSudoku(
 
   try {
     const response = await fetch(
-      "https://satyaprakashmohanty13-sudoku-solver-ocr.hf.space/solve/",
+      "https://satyaprakashmohanty13-sudoku-solver-ocr.hf.space/solve",
       {
         method: "POST",
         body: apiFormData,
