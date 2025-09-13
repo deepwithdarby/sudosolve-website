@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useState, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import Image from "next/image";
 import { solveSudoku } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ function SubmitButton({ hasFile }: { hasFile: boolean }) {
 }
 
 export function SudokuSolverForm() {
-  const [state, formAction] = useFormState(solveSudoku, initialState);
+  const [state, formAction] = useActionState(solveSudoku, initialState);
   const { pending } = useFormStatus();
 
   const [file, setFile] = useState<File | null>(null);
