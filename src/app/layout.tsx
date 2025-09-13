@@ -21,6 +21,41 @@ export default function RootLayout({
         <link rel="preload" href="https://res.cloudinary.com/dk46fa3yl/image/upload/v1757737096/grok_image_a3kb7r_q0hlks.jpg" as="image" />
       </head>
       <body className="font-body antialiased">
+        <svg style={{ position: 'absolute', width: 0, height: 0 }} >
+          <defs>
+            <filter id="melt-filter">
+              <feTurbulence 
+                type="fractalNoise" 
+                baseFrequency="0.02" 
+                numOctaves="1" 
+                result="turbulence"
+                seed="0"
+              >
+                 <animate 
+                    attributeName="baseFrequency" 
+                    dur="20s" 
+                    values="0.02;0.03;0.02" 
+                    repeatCount="indefinite"
+                  />
+              </feTurbulence>
+              <feDisplacementMap 
+                in="SourceGraphic" 
+                in2="turbulence" 
+                scale="5" 
+                xChannelSelector="R" 
+                yChannelSelector="G"
+              >
+                <animate
+                  attributeName="scale"
+                  dur="20s"
+                  values="5;15;5"
+                  repeatCount="indefinite"
+                />
+              </feDisplacementMap>
+            </filter>
+          </defs>
+        </svg>
+
         {children}
         <Toaster />
       </body>

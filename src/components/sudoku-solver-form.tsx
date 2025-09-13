@@ -72,8 +72,11 @@ export function SudokuSolverForm() {
       }
       setPreviewUrl(URL.createObjectURL(selectedFile));
       
-      const emptyFormData = new FormData();
-      formAction(emptyFormData);
+      // Reset the form state when a new file is selected.
+      if (state.solvedImageUrl || state.error) {
+        const emptyFormData = new FormData();
+        formAction(emptyFormData);
+      }
     }
   };
   
@@ -89,6 +92,9 @@ export function SudokuSolverForm() {
         formRef.current.reset();
     }
     const emptyFormData = new FormData();
+    // This is the key change: we create a new FormData with a 'reset' flag
+    // to signal the server action to clear its state.
+    emptyFormData.append('image', new File([], ''));
     formAction(emptyFormData);
   };
 
@@ -103,6 +109,7 @@ export function SudokuSolverForm() {
   };
   
   useEffect(() => {
+    // This effect is to clear the file input after a successful solve.
     if (state.solvedImageUrl && file) {
         setFile(null);
         if (fileInputRef.current) {
@@ -113,7 +120,7 @@ export function SudokuSolverForm() {
 
 
   const currentError = localError || (state.error && !isPending ? state.error : null);
-  const isSolved = state.solvedImageUrl && !file && !isPending;
+  const isSolved = state.solvedImageUrl && !isPending;
 
 
   const DisplayContent = () => {
@@ -151,7 +158,7 @@ export function SudokuSolverForm() {
 
 
   return (
-    <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 shimmer-card">
+    <Card className="w-full max-w-lg bg-white/20 backdrop-blur-xl border-white/30 shadow-2xl shadow-primary/20 melt-card">
       <CardContent className="p-6">
         <form ref={formRef} action={formAction} className="space-y-6">
           <div className="relative">
@@ -171,7 +178,7 @@ export function SudokuSolverForm() {
               className="sr-only"
               disabled={isPending}
             />
-             {previewUrl && !isPending && (
+             {previewUrl && !isSolved && !isPending && (
                 <Button variant="ghost" size="icon" type="button" aria-label="Clear preview" className="absolute top-3 right-3 bg-black/40 hover:bg-black/60 text-white hover:text-white rounded-full h-8 w-8 z-10" onClick={handleReset}>
                     <X className="h-4 w-4"/>
                 </Button>
@@ -194,7 +201,7 @@ export function SudokuSolverForm() {
                 </Button>
                 <Button type="button" variant="secondary" size="lg" className="py-7 text-base" onClick={handleReset}>
                     <Trash2 className="mr-2 h-5 w-5" />
-                    Clear
+                    New Scan
                 </Button>
             </div>
           ) : (
