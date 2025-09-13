@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef, useActionState } from "react";
@@ -7,7 +8,7 @@ import { solveSudoku } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, UploadCloud, WandSparkles, X, AlertCircle } from "lucide-react";
+import { Loader2, UploadCloud, WandSparkles, X, AlertCircle, Download, Trash2 } from "lucide-react";
 
 const initialState: { solvedImageUrl: string | null; error: string | null } = {
   solvedImageUrl: null,
@@ -57,12 +58,6 @@ export function SudokuSolverForm() {
     };
   }, [previewUrl]);
 
-  useEffect(() => {
-    if (state.solvedImageUrl) {
-      handleReset(false);
-    }
-  }, [state.solvedImageUrl]);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -76,34 +71,60 @@ export function SudokuSolverForm() {
         URL.revokeObjectURL(previewUrl);
       }
       setPreviewUrl(URL.createObjectURL(selectedFile));
+      // Clear previous solved state when a new file is chosen
+      if (state.solvedImageUrl || state.error) {
+        formRef.current?.reset();
+      }
     }
   };
-
-  const handleReset = (resetFormState = true) => {
+  
+  const handleReset = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(null);
     setLocalError(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+        fileInputRef.current.value = "";
     }
-    if (resetFormState && formRef.current) {
+    if (formRef.current) {
         formRef.current.reset();
-        // Manually reset the form state if needed, but a new submission will do that.
     }
   };
 
+  const handleDownload = () => {
+    if (!state.solvedImageUrl) return;
+    const link = document.createElement("a");
+    link.href = state.solvedImageUrl;
+    link.download = "solved-sudoku.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  useEffect(() => {
+    if (state.solvedImageUrl && file) {
+        // Clear file input after a successful solve to transition to the "solved" state
+        setFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    }
+  }, [state.solvedImageUrl, file]);
+
+
   const currentError = localError || (state.error && !pending ? state.error : null);
+  const isSolved = state.solvedImageUrl && !file && !pending;
+
 
   const DisplayContent = () => {
-    const imageToDisplay = state.solvedImageUrl && !file ? state.solvedImageUrl : previewUrl;
+    const imageToDisplay = isSolved ? state.solvedImageUrl : previewUrl;
 
     if (imageToDisplay) {
       return (
         <div className="relative h-full w-full">
             <Image
             src={imageToDisplay}
-            alt={state.solvedImageUrl ? "Solved Sudoku" : "Sudoku preview"}
+            alt={isSolved ? "Solved Sudoku" : "Sudoku preview"}
             fill
             className="rounded-md object-contain"
             />
@@ -150,8 +171,8 @@ export function SudokuSolverForm() {
               className="sr-only"
               disabled={pending}
             />
-            {(previewUrl || (state.solvedImageUrl && !file)) && !pending && (
-                <Button variant="ghost" size="icon" type="button" aria-label="Clear image" className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white hover:text-white rounded-full h-8 w-8 z-10" onClick={() => handleReset(true)}>
+             {previewUrl && !pending && (
+                <Button variant="ghost" size="icon" type="button" aria-label="Clear preview" className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white hover:text-white rounded-full h-8 w-8 z-10" onClick={handleReset}>
                     <X className="h-4 w-4"/>
                 </Button>
             )}
@@ -164,8 +185,22 @@ export function SudokuSolverForm() {
                 <AlertDescription>{currentError}</AlertDescription>
             </Alert>
           )}
-          
-          <SubmitButton hasFile={!!file} />
+
+          {isSolved ? (
+            <div className="grid grid-cols-2 gap-4">
+                <Button type="button" variant="outline" size="lg" onClick={handleDownload}>
+                    <Download className="mr-2 h-5 w-5" />
+                    Download
+                </Button>
+                <Button type="button" variant="secondary" size="lg" onClick={handleReset}>
+                    <Trash2 className="mr-2 h-5 w-5" />
+                    Clear
+                </Button>
+            </div>
+          ) : (
+            <SubmitButton hasFile={!!file} />
+          )}
+
         </form>
       </CardContent>
     </Card>
