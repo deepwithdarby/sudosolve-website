@@ -81,9 +81,19 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background-image: url('https://res.cloudinary.com/dk46fa3yl/image/upload/v1757737096/grok_image_a3kb7r_q0hlks.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    z-index: -1;
   }
 }
